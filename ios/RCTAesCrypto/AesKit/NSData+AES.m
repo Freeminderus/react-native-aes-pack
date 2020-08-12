@@ -20,14 +20,14 @@
 //(key和iv向量这里是16位的) 这里是CBC加密模式，安全性更高
 
 -(NSData *)AES128EncryptWithKey:(NSString *)key gIv:(NSString *)gIv {//加密
-    char keyPtr[kCCKeySizeAES128+1];
+    char keyPtr[kCCKeySizeAES256+1];
     bzero(keyPtr, sizeof(keyPtr));
     [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
-    
-    char ivPtr[kCCKeySizeAES128+1];
+
+    char ivPtr[kCCKeySizeAES256+1];
     memset(ivPtr, 0, sizeof(ivPtr));
     [gIv getCString:ivPtr maxLength:sizeof(ivPtr) encoding:NSUTF8StringEncoding];
-    
+
     NSUInteger dataLength = [self length];
     size_t bufferSize = dataLength + kCCBlockSizeAES128;
     void *buffer = malloc(bufferSize);
@@ -36,7 +36,7 @@
                                           kCCAlgorithmAES128,
                                           kCCOptionPKCS7Padding,
                                           keyPtr,
-                                          kCCBlockSizeAES128,
+                                          kCCKeySizeAES256,
                                           ivPtr,
                                           [self bytes],
                                           dataLength,
@@ -51,14 +51,14 @@
 }
 
 - (NSData *)AES128DecryptWithKey:(NSString *)key gIv:(NSString *)gIv {//解密
-    char keyPtr[kCCKeySizeAES128+1];
+    char keyPtr[kCCKeySizeAES256+1];
     bzero(keyPtr, sizeof(keyPtr));
     [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
-    
-    char ivPtr[kCCKeySizeAES128+1];
+
+    char ivPtr[kCCKeySizeAES256+1];
     memset(ivPtr, 0, sizeof(ivPtr));
     [gIv getCString:ivPtr maxLength:sizeof(ivPtr) encoding:NSUTF8StringEncoding];
-    
+
     NSUInteger dataLength = [self length];
     size_t bufferSize = dataLength + kCCBlockSizeAES128;
     void *buffer = malloc(bufferSize);
@@ -67,7 +67,7 @@
                                           kCCAlgorithmAES128,
                                           kCCOptionPKCS7Padding,
                                           keyPtr,
-                                          kCCBlockSizeAES128,
+                                          kCCKeySizeAES256,
                                           ivPtr,
                                           [self bytes],
                                           dataLength,
